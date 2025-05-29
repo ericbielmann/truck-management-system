@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: truck_mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: truck_management
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - truck_network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: truck_backend
+    restart: always
+    ports:
+      - "5001:5001"
+    environment:
+      NODE_ENV: development
+      PORT: 5001
+      # MONGODB_URI: mongodb://admin:password123@mongodb:27017/truck_management?authSource=admin
+      MONGODB_URI: mongodb://admin:password123@mongodb:27017/truck_management?authSource=admin
+      JWT_SECRET: your_super_secret_jwt_key_here_change_in_production
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - truck_network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: truck_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      # Frontend always connects to localhost from browser
+      REACT_APP_API_URL: http://localhost:5001/api
+      GENERATE_SOURCEMAP: false
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/public
+    networks:
+      - truck_network
+
+volumes:
+  mongodb_data:
+
+networks:
+  truck_network:
+    driver: bridge
