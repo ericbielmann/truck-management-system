@@ -43,15 +43,15 @@ Un sistema completo de gestión para el despacho y seguimiento de viajes de cami
 ### Opción 1: Con Docker (Recomendado)
 
 1. **Clonar el repositorio**
-\`\`\`bash
+```bash
 git clone <url-del-repositorio>
 cd truck-management-system
-\`\`\`
+```
 
 2. **Ejecutar con Docker Compose**
-\`\`\`bash
+```bash
 docker-compose up --build
-\`\`\`
+```
 
 3. **Acceder a la aplicación**
 - Frontend: http://localhost:3000
@@ -61,24 +61,24 @@ docker-compose up --build
 ### Opción 2: Desarrollo Local
 
 1. **Backend**
-\`\`\`bash
+```bash
 cd backend
 npm install
 npm run dev
-\`\`\`
+```
 
 2. **Frontend**
-\`\`\`bash
+```bash
 cd frontend
 npm install
 npm start
-\`\`\`
+```
 
 3. **MongoDB**
-\`\`\`bash
+```bash
 # Instalar y ejecutar MongoDB localmente
 # O usar MongoDB Atlas (cloud)
-\`\`\`
+```
 
 ## 🔐 Credenciales de Prueba
 
@@ -89,7 +89,7 @@ Para probar el sistema, puedes crear un usuario o usar estas credenciales de dem
 
 ## 📊 Estructura del Proyecto
 
-\`\`\`
+```
 truck-management-system/
 ├── backend/
 │   ├── models/          # Modelos de MongoDB
@@ -104,7 +104,7 @@ truck-management-system/
 │   └── public/
 ├── docker-compose.yml   # Configuración Docker
 └── README.md
-\`\`\`
+```
 
 ## 🔧 API Endpoints
 
@@ -132,7 +132,7 @@ truck-management-system/
 ## 📝 Modelo de Datos
 
 ### Viaje
-\`\`\`json
+```json
 {
   "id": "UUID",
   "camion": "ABC123",
@@ -148,7 +148,7 @@ truck-management-system/
   "createdAt": "2025-01-26T...",
   "updatedAt": "2025-01-26T..."
 }
-\`\`\`
+```
 
 ### Estados Válidos
 - `Programado`: Viaje planificado
@@ -191,21 +191,21 @@ truck-management-system/
 ## 🔧 Variables de Entorno
 
 ### Backend (.env)
-\`\`\`env
+```env
 NODE_ENV=development
 PORT=5001
 MONGODB_URI=mongodb://admin:password123@mongodb:27017/truck_management?authSource=admin
 JWT_SECRET=your_super_secret_jwt_key_here_change_in_production
-\`\`\`
+```
 
 ### Frontend (.env)
-\`\`\`env
+```env
 REACT_APP_API_URL=http://localhost:5001/api
-\`\`\`
+```
 
 ## 🧪 Testing
 
-\`\`\`bash
+```bash
 # Backend tests
 cd backend
 npm test
@@ -213,7 +213,7 @@ npm test
 # Frontend tests
 cd frontend
 npm test
-\`\`\`
+```
 
 ## 📈 Mejoras Futuras
 
