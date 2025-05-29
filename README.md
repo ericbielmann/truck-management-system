@@ -217,13 +217,12 @@ npm test
 
 ## 📈 Mejoras Futuras
 
-- [ ] Notificaciones en tiempo real (WebSockets)
-- [ ] Geolocalización y tracking GPS
+- [ ] Implementación de Typescript
+- [ ] Mejoras mobile
 - [ ] Reportes y analytics avanzados
-- [ ] Integración con sistemas externos
-- [ ] App móvil para conductores
+- [ ] Gestión de usuarios
+- [ ] Add tanstack react-router and react-query
 - [ ] Sistema de roles más granular
-- [ ] Backup automático de datos
 - [ ] Logs de auditoría
 
 ## 🤝 Contribución

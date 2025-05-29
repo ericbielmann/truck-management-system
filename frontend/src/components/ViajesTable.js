@@ -98,7 +98,7 @@ const ViajesTable = ({ viajes, loading, pagination, onPageChange, onEdit, onDele
             {viajes.map((viaje) => (
               <tr key={viaje.id} className="hover:bg-gray-50">
                 <td className="table-cell font-medium">{viaje.camion}</td>
-                <td className="table-cell">{viaje.conductor}</td>
+                <td className="table-cell overflow-hidden text-ellipsis whitespace-nowrap max-w-[180px]">{viaje.conductor}</td>
                 <td className="table-cell">
                   <div className="text-sm">
                     <div className="font-medium">{viaje.origen}</div>
