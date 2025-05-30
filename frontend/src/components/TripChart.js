@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { PieChart, Pie, BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { BarChart2, PieChart as PieChartIcon } from 'lucide-react';
 
-const COLORS = ['#4b5563', '#2563eb', '#7c3aed', '#16a34a', '#ea580c'];
+// Using our theme colors
+const COLORS = ['#2563eb', '#16a34a', '#7c3aed', '#ea580c', '#64748b'];
 
 const TripChart = ({ viajes }) => {
   const [chartType, setChartType] = useState('pie');
@@ -99,12 +100,16 @@ const TripChart = ({ viajes }) => {
                 bottom: 5,
               }}
             >
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid strokeDasharray="3 3" className="opacity-50" />
               <XAxis dataKey="name" />
               <YAxis tickFormatter={(value) => `${formatNumber(value)}L`} />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
-              <Bar dataKey="value" fill="#2563eb" />
+              <Bar dataKey="value">
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Bar>
             </BarChart>
           )}
         </ResponsiveContainer>
