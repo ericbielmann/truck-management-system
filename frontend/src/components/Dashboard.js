@@ -1,5 +1,4 @@
 "use client"
-
 import { useState, useEffect } from "react"
 import { useAuth } from "../contexts/AuthContext"
 import ViajesTable from "./ViajesTable"
@@ -148,7 +147,7 @@ const Dashboard = () => {
 
         {/* Chart */}
         <div className="mb-8 bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Evolución de Viajes</h2>
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">Litros de Combustible por Día</h2>
           <TripChart viajes={viajes} />
         </div>
 
