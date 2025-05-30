@@ -1,29 +1,27 @@
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useState } from 'react';
+import { PieChart, Pie, BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart2, PieChart as PieChartIcon } from 'lucide-react';
+
+const COLORS = ['#4b5563', '#2563eb', '#7c3aed', '#16a34a', '#ea580c'];
 
 const TripChart = ({ viajes }) => {
-  // Process data for the chart
+  const [chartType, setChartType] = useState('pie');
+
+  // Process data for the charts
   const processData = () => {
-    // Group viajes by date and sum fuel quantities
+    // Group viajes by fuel type and sum quantities
     const groupedData = viajes.reduce((acc, viaje) => {
-      const date = format(new Date(viaje.fecha_salida), 'yyyy-MM-dd');
-      if (!acc[date]) {
-        acc[date] = {
-          date,
-          'Diésel': 0,
-          'Nafta Super': 0,
-          'Nafta Premium': 0,
-          'GNC': 0,
-          'GLP': 0,
+      if (!acc[viaje.combustible]) {
+        acc[viaje.combustible] = {
+          name: viaje.combustible,
+          value: 0
         };
       }
-      acc[date][viaje.combustible] += viaje.cantidad_litros;
+      acc[viaje.combustible].value += viaje.cantidad_litros;
       return acc;
     }, {});
 
-    // Convert to array and sort by date
-    return Object.values(groupedData).sort((a, b) => new Date(a.date) - new Date(b.date));
+    return Object.values(groupedData);
   };
 
   const data = processData();
@@ -33,65 +31,84 @@ const TripChart = ({ viajes }) => {
     return new Intl.NumberFormat('es-AR').format(number);
   };
 
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-2 border border-gray-200 rounded shadow-sm">
+          <p className="font-medium">{payload[0].name}</p>
+          <p className="text-gray-600">{`${formatNumber(payload[0].value)}L`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
-    <div className="h-[400px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis 
-            dataKey="date" 
-            tickFormatter={(date) => format(new Date(date), 'dd/MM', { locale: es })}
-          />
-          <YAxis 
-            tickFormatter={(value) => `${formatNumber(value)}L`}
-          />
-          <Tooltip 
-            labelFormatter={(date) => format(new Date(date), 'dd/MM/yyyy', { locale: es })}
-            formatter={(value, name) => [`${formatNumber(value)}L`, name]}
-          />
-          <Legend />
-          <Area 
-            type="monotone" 
-            dataKey="Diésel" 
-            stackId="1"
-            stroke="#4b5563" 
-            fill="#4b5563" 
-            fillOpacity={0.6}
-          />
-          <Area 
-            type="monotone" 
-            dataKey="Nafta Super" 
-            stackId="1"
-            stroke="#2563eb" 
-            fill="#2563eb"
-            fillOpacity={0.6}
-          />
-          <Area 
-            type="monotone" 
-            dataKey="Nafta Premium" 
-            stackId="1"
-            stroke="#7c3aed" 
-            fill="#7c3aed"
-            fillOpacity={0.6}
-          />
-          <Area 
-            type="monotone" 
-            dataKey="GNC" 
-            stackId="1"
-            stroke="#16a34a" 
-            fill="#16a34a"
-            fillOpacity={0.6}
-          />
-          <Area 
-            type="monotone" 
-            dataKey="GLP" 
-            stackId="1"
-            stroke="#ea580c" 
-            fill="#ea580c"
-            fillOpacity={0.6}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+    <div>
+      {/* Chart Type Toggle */}
+      <div className="flex justify-end mb-4 gap-2">
+        <button
+          onClick={() => setChartType('pie')}
+          className={`p-2 rounded ${
+            chartType === 'pie' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'
+          }`}
+          title="Gráfico de Torta"
+        >
+          <PieChartIcon className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() => setChartType('bar')}
+          className={`p-2 rounded ${
+            chartType === 'bar' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'
+          }`}
+          title="Gráfico de Barras"
+        >
+          <BarChart2 className="h-5 w-5" />
+        </button>
+      </div>
+
+      {/* Chart Container */}
+      <div className="h-[300px] w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          {chartType === 'pie' ? (
+            <PieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                outerRadius={100}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip content={<CustomTooltip />} />
+              <Legend />
+            </PieChart>
+          ) : (
+            <BarChart
+              data={data}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis tickFormatter={(value) => `${formatNumber(value)}L`} />
+              <Tooltip content={<CustomTooltip />} />
+              <Legend />
+              <Bar dataKey="value" fill="#2563eb" />
+            </BarChart>
+          )}
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 };
