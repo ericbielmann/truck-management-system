@@ -139,22 +139,14 @@ const Dashboard = () => {
       <Header user={user} />
 
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Stats Cards */}
-          <div className="lg:w-2/3">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard de Viajes</h1>
-            <StatsCards stats={stats} />
-          </div>
-
-          {/* Chart */}
-          <div className="lg:w-1/3 bg-white p-4 rounded-lg shadow">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Distribución de Combustible</h2>
-            <TripChart viajes={viajes} />
-          </div>
+        {/* Stats Cards */}
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard de Viajes</h1>
+          <StatsCards stats={stats} />
         </div>
 
         {/* Filtros y botón de crear */}
-        <div className="my-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="mb-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <Filters filters={filters} onFilterChange={handleFilterChange} />
 
           <button onClick={handleCreateViaje} className="btn-primary flex items-center gap-2 whitespace-nowrap">
@@ -164,7 +156,7 @@ const Dashboard = () => {
         </div>
 
         {/* Tabla de viajes */}
-        <div className="card">
+        <div className="card mb-8">
           <ViajesTable
             viajes={viajes}
             loading={loading}
@@ -178,6 +170,12 @@ const Dashboard = () => {
               sortOrder: filters.sortOrder,
             }}
           />
+        </div>
+
+        {/* Chart */}
+        <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">Distribución de Combustible</h2>
+          <TripChart viajes={viajes} />
         </div>
       </main>
 
