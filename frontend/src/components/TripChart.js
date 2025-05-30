@@ -15,7 +15,8 @@ const TripChart = ({ viajes }) => {
       if (!acc[viaje.combustible]) {
         acc[viaje.combustible] = {
           name: viaje.combustible,
-          value: 0
+          value: 0,
+          fill: COLORS[Object.keys(acc).length % COLORS.length] // Add fill color to data
         };
       }
       acc[viaje.combustible].value += viaje.cantidad_litros;
@@ -42,6 +43,23 @@ const TripChart = ({ viajes }) => {
       );
     }
     return null;
+  };
+
+  // Custom legend that uses our color scheme
+  const CustomLegend = ({ payload }) => {
+    return (
+      <ul className="flex flex-wrap justify-center gap-4 mt-2">
+        {payload.map((entry, index) => (
+          <li key={`legend-${index}`} className="flex items-center gap-2">
+            <div
+              className="w-3 h-3 rounded-sm"
+              style={{ backgroundColor: entry.payload.fill }}
+            />
+            <span className="text-sm text-gray-600">{entry.value}</span>
+          </li>
+        ))}
+      </ul>
+    );
   };
 
   return (
@@ -84,11 +102,11 @@ const TripChart = ({ viajes }) => {
                 dataKey="value"
               >
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell key={`cell-${index}`} fill={entry.fill} />
                 ))}
               </Pie>
               <Tooltip content={<CustomTooltip />} />
-              <Legend />
+              <Legend content={<CustomLegend />} />
             </PieChart>
           ) : (
             <BarChart
@@ -104,10 +122,10 @@ const TripChart = ({ viajes }) => {
               <XAxis dataKey="name" />
               <YAxis tickFormatter={(value) => `${formatNumber(value)}L`} />
               <Tooltip content={<CustomTooltip />} />
-              <Legend />
+              <Legend content={<CustomLegend />} />
               <Bar dataKey="value">
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell key={`cell-${index}`} fill={entry.fill} />
                 ))}
               </Bar>
             </BarChart>
