@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext"
 import ViajesTable from "./ViajesTable"
 import ViajeModal from "./ViajeModal"
 import StatsCards from "./StatsCards"
+import TripChart from "./TripChart"
 import Header from "./Header"
 import Filters from "./Filters"
 import { Plus } from "lucide-react"
@@ -24,7 +25,7 @@ const Dashboard = () => {
     conductor: "",
     sortBy: "fecha_salida",
     sortOrder: "desc",
-    showCanceled: false, // Nueva opción para mostrar/ocultar cancelados
+    showCanceled: false,
   })
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -143,6 +144,12 @@ const Dashboard = () => {
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard de Viajes</h1>
           <StatsCards stats={stats} />
+        </div>
+
+        {/* Chart */}
+        <div className="mb-8 bg-white p-4 rounded-lg shadow">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">Evolución de Viajes</h2>
+          <TripChart viajes={viajes} />
         </div>
 
         {/* Filtros y botón de crear */}
