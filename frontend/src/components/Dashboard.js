@@ -1,10 +1,10 @@
 "use client"
-
 import { useState, useEffect } from "react"
 import { useAuth } from "../contexts/AuthContext"
 import ViajesTable from "./ViajesTable"
 import ViajeModal from "./ViajeModal"
 import StatsCards from "./StatsCards"
+import TripChart from "./TripChart"
 import Header from "./Header"
 import Filters from "./Filters"
 import { Plus } from "lucide-react"
@@ -24,7 +24,7 @@ const Dashboard = () => {
     conductor: "",
     sortBy: "fecha_salida",
     sortOrder: "desc",
-    showCanceled: false, // Nueva opción para mostrar/ocultar cancelados
+    showCanceled: false,
   })
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -139,7 +139,7 @@ const Dashboard = () => {
       <Header user={user} />
 
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        {/* Estadísticas */}
+        {/* Stats Cards */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard de Viajes</h1>
           <StatsCards stats={stats} />
@@ -156,7 +156,7 @@ const Dashboard = () => {
         </div>
 
         {/* Tabla de viajes */}
-        <div className="card">
+        <div className="card mb-8">
           <ViajesTable
             viajes={viajes}
             loading={loading}
@@ -170,6 +170,12 @@ const Dashboard = () => {
               sortOrder: filters.sortOrder,
             }}
           />
+        </div>
+
+        {/* Chart */}
+        <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">Distribución de Combustible</h2>
+          <TripChart viajes={viajes} />
         </div>
       </main>
 
