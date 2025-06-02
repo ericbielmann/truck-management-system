@@ -1,31 +1,16 @@
 const express = require("express")
-const { body } = require("express-validator")
 const auth = require("../middleware/auth")
+const { registerValidators, loginValidators } = require("../middleware/validators/authValidators")
+const validateRequest = require("../middleware/validators/validateRequest")
 const { register, login, getCurrentUser, logout } = require("../controllers/authController")
 
 const router = express.Router()
 
 // POST /api/auth/register - Register user
-router.post(
-  "/register",
-  [
-    body("email").isEmail().normalizeEmail().withMessage("Email inválido"),
-    body("password").isLength({ min: 6 }).withMessage("La contraseña debe tener al menos 6 caracteres"),
-    body("nombre").trim().isLength({ min: 2 }).withMessage("El nombre debe tener al menos 2 caracteres"),
-    body("rol").isIn(["admin", "operador"]).withMessage("Rol inválido"),
-  ],
-  register
-)
+router.post("/register", registerValidators, validateRequest, register)
 
 // POST /api/auth/login - Login user
-router.post(
-  "/login",
-  [
-    body("email").isEmail().normalizeEmail(),
-    body("password").exists()
-  ],
-  login
-)
+router.post("/login", loginValidators, validateRequest, login)
 
 // GET /api/auth/me - Get current user
 router.get("/me", auth, getCurrentUser)
