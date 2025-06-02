@@ -6,7 +6,14 @@ const getViajesValidators = [
   query("estado").optional().isIn(["Programado", "En tránsito", "Entregado", "Cancelado"]),
   query("combustible").optional().isIn(["Diésel", "Nafta Super", "Nafta Premium", "GNC", "GLP"]),
   query("conductor").optional().trim(),
-  query("sortBy").optional().isIn(["fecha_salida", "conductor", "estado", "cantidad_litros"]),
+  query("sortBy").optional().isIn([
+    "fecha_salida",
+    "conductor",
+    "estado",
+    "cantidad_litros",
+    "camion",
+    "combustible"
+  ]),
   query("sortOrder").optional().isIn(["asc", "desc"]),
   query("excludeStatus").optional().isString(),
   query("showCanceled").optional().isBoolean(),
