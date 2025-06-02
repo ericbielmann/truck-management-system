@@ -10,7 +10,7 @@ const {
   getViajes,
   getViaje,
   createViaje,
-  updateViaje,
+  updateViaje,z
   deleteViaje,
   getDashboardStats,
 } = require("../controllers/viajesController")
