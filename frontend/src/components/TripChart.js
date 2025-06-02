@@ -15,11 +15,11 @@ const TripChart = ({ viajes }) => {
       if (!acc[viaje.combustible]) {
         acc[viaje.combustible] = {
           name: viaje.combustible,
-          value: 0,
-          fill: COLORS[Object.keys(acc).length % COLORS.length] // Add fill color to data
+          litros: 0,
+          fill: COLORS[Object.keys(acc).length % COLORS.length]
         };
       }
-      acc[viaje.combustible].value += viaje.cantidad_litros;
+      acc[viaje.combustible].litros += viaje.cantidad_litros;
       return acc;
     }, {});
 
@@ -43,23 +43,6 @@ const TripChart = ({ viajes }) => {
       );
     }
     return null;
-  };
-
-  // Custom legend that uses our color scheme
-  const CustomLegend = ({ payload }) => {
-    return (
-      <ul className="flex flex-wrap justify-center gap-4 mt-2">
-        {payload.map((entry, index) => (
-          <li key={`legend-${index}`} className="flex items-center gap-2">
-            <div
-              className="w-3 h-3 rounded-sm"
-              style={{ backgroundColor: entry.payload.fill }}
-            />
-            <span className="text-sm text-gray-600">{entry.value}</span>
-          </li>
-        ))}
-      </ul>
-    );
   };
 
   return (
@@ -99,7 +82,7 @@ const TripChart = ({ viajes }) => {
                 label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
                 outerRadius={100}
                 fill="#8884d8"
-                dataKey="value"
+                dataKey="litros"
                 nameKey="name"
               >
                 {data.map((entry, index) => (
@@ -124,7 +107,11 @@ const TripChart = ({ viajes }) => {
               <YAxis tickFormatter={(value) => `${formatNumber(value)}L`} />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
-              <Bar dataKey="value" name="Litros">
+              <Bar 
+                dataKey="litros" 
+                name="Litros"
+                fill="#8884d8"
+              >
                 {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.fill} />
                 ))}
