@@ -28,16 +28,11 @@ const getViajes = async (req, res) => {
 
     console.log("Applied filters:", filters)
 
-    // Build sort
+    // Build sort object
     const sort = {}
-    // Special handling for conductor field to ensure case-insensitive sorting
-    if (sortBy === "conductor") {
-      sort[sortBy] = { $regex: "^", $options: "i" }
-    } else {
-      sort[sortBy] = sortOrder === "asc" ? 1 : -1
-    }
+    sort[sortBy] = sortOrder === "asc" ? 1 : -1
 
-    // Execute query with pagination and proper sorting
+    // Execute query with pagination
     const skip = (page - 1) * limit
     const viajes = await Viaje.find(filters)
       .collation({ locale: "es", strength: 2 }) // Enable case-insensitive sorting
