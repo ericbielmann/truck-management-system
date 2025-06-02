@@ -15,11 +15,11 @@ const TripChart = ({ viajes }) => {
       if (!acc[viaje.combustible]) {
         acc[viaje.combustible] = {
           name: viaje.combustible,
-          value: 0,
+          litros: 0,
           fill: COLORS[Object.keys(acc).length % COLORS.length] // Add fill color to data
         };
       }
-      acc[viaje.combustible].value += viaje.cantidad_litros;
+      acc[viaje.combustible].litros += viaje.cantidad_litros;
       return acc;
     }, {});
 
@@ -99,7 +99,8 @@ const TripChart = ({ viajes }) => {
                 label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
                 outerRadius={100}
                 fill="#8884d8"
-                dataKey="value"
+                dataKey="litros"
+                nameKey="name"
               >
                 {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -122,8 +123,8 @@ const TripChart = ({ viajes }) => {
               <XAxis dataKey="name" />
               <YAxis tickFormatter={(value) => `${formatNumber(value)}L`} />
               <Tooltip content={<CustomTooltip />} />
-              <Legend content={<CustomLegend />} />
-              <Bar dataKey="value">
+              <Legend />
+              <Bar name="Litros" dataKey="litros">
                 {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.fill} />
                 ))}
