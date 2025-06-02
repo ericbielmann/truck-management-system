@@ -3,13 +3,13 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copy package files first for better caching
-COPY frontend/package*.json ./
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy all frontend files
-COPY frontend/ .
+COPY . .
 
 # Ensure public directory exists with required files
 RUN ls -la public/
