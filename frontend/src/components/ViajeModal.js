@@ -1,10 +1,11 @@
 "use client"
-
 import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { X, Save, Truck } from "lucide-react"
 import axios from "axios"
 import toast from "react-hot-toast"
+import { viajeSchema } from "../schemas/viaje.schema"
 
 const ViajeModal = ({ viaje, onClose, onSuccess }) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -14,11 +15,23 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
     setValue,
-  } = useForm()
+  } = useForm({
+    resolver: zodResolver(viajeSchema),
+    defaultValues: {
+      camion: "",
+      conductor: "",
+      origen: "",
+      destino: "",
+      combustible: "",
+      cantidad_litros: "",
+      fecha_salida: "",
+      observaciones: "",
+      estado: isEditing ? viaje?.estado : "Programado",
+    },
+  })
 
-  // Cargar datos del viaje si estamos editando
+  // Load trip data if editing
   useEffect(() => {
     if (isEditing) {
       setValue("camion", viaje.camion)
@@ -36,12 +49,8 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
   const onSubmit = async (data) => {
     setIsLoading(true)
     try {
-      // Convertir fecha a ISO string
-      const fechaSalida = new Date(data.fecha_salida).toISOString()
-
       const viajeData = {
         ...data,
-        fecha_salida: fechaSalida,
         cantidad_litros: Number.parseInt(data.cantidad_litros),
       }
 
@@ -63,12 +72,6 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
     }
   }
 
-  // Obtener fecha mínima (ahora)
-  const getMinDateTime = () => {
-    const now = new Date()
-    return now.toISOString().slice(0, 16)
-  }
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -87,22 +90,15 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
 
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
-          {/* Fila 1: Camión y Conductor */}
+          {/* Camión y Conductor */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Patente del Camión *</label>
               <input
-                {...register("camion", {
-                  required: "La patente es requerida",
-                  pattern: {
-                    value: /^[A-Z0-9]{6,8}$/,
-                    message: "Formato inválido (ej: ABC123)",
-                  },
-                })}
+                {...register("camion")}
                 type="text"
                 className="input-field uppercase"
                 placeholder="ABC123"
-                maxLength={8}
               />
               {errors.camion && <p className="mt-1 text-sm text-red-600">{errors.camion.message}</p>}
             </div>
@@ -110,13 +106,7 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Conductor *</label>
               <input
-                {...register("conductor", {
-                  required: "El conductor es requerido",
-                  minLength: {
-                    value: 2,
-                    message: "Mínimo 2 caracteres",
-                  },
-                })}
+                {...register("conductor")}
                 type="text"
                 className="input-field"
                 placeholder="Juan Pérez"
@@ -125,18 +115,12 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
             </div>
           </div>
 
-          {/* Fila 2: Origen y Destino */}
+          {/* Origen y Destino */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Origen *</label>
               <input
-                {...register("origen", {
-                  required: "El origen es requerido",
-                  minLength: {
-                    value: 2,
-                    message: "Mínimo 2 caracteres",
-                  },
-                })}
+                {...register("origen")}
                 type="text"
                 className="input-field"
                 placeholder="Planta X"
@@ -147,13 +131,7 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Destino *</label>
               <input
-                {...register("destino", {
-                  required: "El destino es requerido",
-                  minLength: {
-                    value: 2,
-                    message: "Mínimo 2 caracteres",
-                  },
-                })}
+                {...register("destino")}
                 type="text"
                 className="input-field"
                 placeholder="Estación Y"
@@ -162,16 +140,11 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
             </div>
           </div>
 
-          {/* Fila 3: Combustible y Cantidad */}
+          {/* Combustible y Cantidad */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Tipo de Combustible *</label>
-              <select
-                {...register("combustible", {
-                  required: "El combustible es requerido",
-                })}
-                className="input-field"
-              >
+              <select {...register("combustible")} className="input-field">
                 <option value="">Seleccionar...</option>
                 <option value="Diésel">Diésel</option>
                 <option value="Nafta Super">Nafta Super</option>
@@ -185,38 +158,23 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Cantidad (Litros) *</label>
               <input
-                {...register("cantidad_litros", {
-                  required: "La cantidad es requerida",
-                  min: {
-                    value: 1,
-                    message: "Mínimo 1 litro",
-                  },
-                  max: {
-                    value: 30000,
-                    message: "Máximo 30,000 litros",
-                  },
-                })}
+                {...register("cantidad_litros", { valueAsNumber: true })}
                 type="number"
                 className="input-field"
                 placeholder="15000"
-                min="1"
-                max="30000"
               />
               {errors.cantidad_litros && <p className="mt-1 text-sm text-red-600">{errors.cantidad_litros.message}</p>}
             </div>
           </div>
 
-          {/* Fila 4: Fecha y Estado */}
+          {/* Fecha y Estado */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Fecha de Salida *</label>
               <input
-                {...register("fecha_salida", {
-                  required: "La fecha es requerida",
-                })}
+                {...register("fecha_salida")}
                 type="datetime-local"
                 className="input-field"
-                min={getMinDateTime()}
               />
               {errors.fecha_salida && <p className="mt-1 text-sm text-red-600">{errors.fecha_salida.message}</p>}
             </div>
@@ -230,6 +188,7 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
                   <option value="Entregado">Entregado</option>
                   <option value="Cancelado">Cancelado</option>
                 </select>
+                {errors.estado && <p className="mt-1 text-sm text-red-600">{errors.estado.message}</p>}
               </div>
             )}
           </div>
@@ -238,21 +197,15 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Observaciones</label>
             <textarea
-              {...register("observaciones", {
-                maxLength: {
-                  value: 500,
-                  message: "Máximo 500 caracteres",
-                },
-              })}
+              {...register("observaciones")}
               className="input-field"
               rows={3}
               placeholder="Observaciones adicionales..."
-              maxLength={500}
             />
             {errors.observaciones && <p className="mt-1 text-sm text-red-600">{errors.observaciones.message}</p>}
           </div>
 
-          {/* Botones */}
+          {/* Buttons */}
           <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
             <button type="button" onClick={onClose} className="btn-secondary" disabled={isLoading}>
               Cancelar
