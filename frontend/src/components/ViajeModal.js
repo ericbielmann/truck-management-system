@@ -101,6 +101,7 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
                 placeholder="ABC123"
               />
               {errors.camion && <p className="mt-1 text-sm text-red-600">{errors.camion.message}</p>}
+              }
             </div>
 
             <div>
@@ -112,6 +113,7 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
                 placeholder="Juan Pérez"
               />
               {errors.conductor && <p className="mt-1 text-sm text-red-600">{errors.conductor.message}</p>}
+              }
             </div>
           </div>
 
@@ -126,6 +128,7 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
                 placeholder="Planta X"
               />
               {errors.origen && <p className="mt-1 text-sm text-red-600">{errors.origen.message}</p>}
+              }
             </div>
 
             <div>
@@ -137,6 +140,7 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
                 placeholder="Estación Y"
               />
               {errors.destino && <p className="mt-1 text-sm text-red-600">{errors.destino.message}</p>}
+              }
             </div>
           </div>
 
@@ -153,6 +157,7 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
                 <option value="GLP">GLP</option>
               </select>
               {errors.combustible && <p className="mt-1 text-sm text-red-600">{errors.combustible.message}</p>}
+              }
             </div>
 
             <div>
@@ -164,6 +169,7 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
                 placeholder="15000"
               />
               {errors.cantidad_litros && <p className="mt-1 text-sm text-red-600">{errors.cantidad_litros.message}</p>}
+              }
             </div>
           </div>
 
@@ -177,6 +183,7 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
                 className="input-field"
               />
               {errors.fecha_salida && <p className="mt-1 text-sm text-red-600">{errors.fecha_salida.message}</p>}
+              }
             </div>
 
             {isEditing && (
@@ -189,6 +196,7 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
                   <option value="Cancelado">Cancelado</option>
                 </select>
                 {errors.estado && <p className="mt-1 text-sm text-red-600">{errors.estado.message}</p>}
+                }
               </div>
             )}
           </div>
@@ -203,6 +211,7 @@ const ViajeModal = ({ viaje, onClose, onSuccess }) => {
               placeholder="Observaciones adicionales..."
             />
             {errors.observaciones && <p className="mt-1 text-sm text-red-600">{errors.observaciones.message}</p>}
+            }
           </div>
 
           {/* Buttons */}
